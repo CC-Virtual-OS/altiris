@@ -1,0 +1,63 @@
+Farm;Description;Country;Environment;Datacenter;Altiris_ns;Altiris_pss
+vcpod-acy;Philadelphia ;International;Production;Atlantic City;172.26.17.212;172.23.46.233
+VCPODCA4-P2;Toronto Kamloops RGS;International;Production;Canada Kamloops;172.26.17.212;172.23.32.233
+vcpodca5-p2;Toronto Kamloops RGS DR;International;Production;Canada Kamloops;172.26.17.212;172.23.38.233
+vcpodgib-rgs;RGS Gibilterra;International;Production;Gibilterra;172.26.17.212;172.23.36.233
+vcpodmad-np1;Pod Produzione Madrid;International;Production;Madrid;172.26.17.212;10.201.156.116
+vcpodmlt-np1;Pod Produzione Malta;International;Production;Malta;172.26.17.212;172.23.48.233
+vcpodmt-rgs;Malta RGS;International;Production;Malta;172.26.17.212;172.23.48.233
+vcl8prod-dr;Lotto DR Milano;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpod-dmzmi;DMZ Milano;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpodcorpmi;Corporate Milano;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+VCPODCS;Nuovo CENTRO SERVIZI;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpoddrmi;Rozzano Disaster Recovery;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+VCPODGEVDR;Gratta e Vinci DR;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+VCPODGEVPREP;Gratta e Vinci Preproduzione;Italy;NO-Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpoditzmi-p1;International ITZ-MI;International;Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpodppmi;PreProduzione Centro servizi Milano;Italy;NO-Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpodimel;IMEL CartaLis Production Milano;Italy;Production;Milano Staro;172.26.17.212;172.26.71.116
+vcpodnccmi;NCC Milano;Italy;Production;Milano Staro;172.26.17.212;172.26.71.116
+vcpodppimel;IMEL CartaLis Prestazionale Milano;Italy;NO-Production;Milano Staro;172.26.17.212;172.26.71.116
+vcpodlnz;Nuova Zelanda;International;Production;Nuova Zelanda;172.26.17.212;172.26.71.116
+dr-imelvcenter1;DR IMEL CartaLis Production Roma;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcl8prep-cb;Lotto Prestazionale Campo Boario;Italy;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcl8prod-cb;Lotto Produzione Campo Boario;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcl8sec-cb;Security CB Environment ;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpod-ita-dcs;Development ITA Environment;Italy;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpod-ita-dcs2;Development ITA Environment ;Italy;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpod-itz-dcs;Development ITZ Environment;International;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpod-itz-dcs2;Development ITZ Environment;International;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpod-itz2-rm;International ITZ-RM;International;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpod03;Consolidamento scommesse;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodarea3;Old Production Environment;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+VCPODCA;Nuova CA;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodcorp;Corporate Italia;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpoddmzrm;DMZ Roma;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+VCPODDRCS;DR Centro Servizi;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodfat;Test Factory;Italy;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+VCPODGEVPROD;Gratta e Vinci Produzione;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodibi;Interactive Betting Infrastructure;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodictsec;ICT Security Environment;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpoditzmgp;International Poker;International;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+VCPODMGMT;Management Island Roma;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodmon;Monitoring Environment;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodnpp;New Poker Platform;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+VCPODOLO;Farm OLO;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodsap;SAP Roma;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodsaptst;SAP Test Environment;Italy;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodsas;SAS Roma;Italy;Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodscs;Old Development Environment;Italy;NO-Production;Roma Campo Boario;172.26.17.212;172.26.17.213
+vcpodnccrm;NCC ROMA;Italy;Production;Roma CB;172.26.17.212;172.26.17.213
+vcpod-dmprod;Distributed multipod B2B;Italy;Production;Roma Distribuito CB + SP;172.26.17.212;172.26.17.213
+vcpoddeb;Digital & Betting;Italy;Production;Roma Distribuito CB + SP;172.26.17.212;172.26.17.213
+VCPODGNTNPR;GNTN Production environment;Italy;Production;Roma Distribuito CB + SP;172.26.17.212;172.26.17.213
+VCPODGNTNTS;GNTN Test environment;Italy;NO-Production;Roma Distribuito CB + SP ;172.26.17.212;172.26.17.213
+vcl8prep-sp;Lotto Prestazionale Scalo Prenestino;Italy;NO-Production;Roma Scalo Prenestino;172.26.17.212;172.26.17.213
+vcl8prod-sp;Lotto Produzione Scalo Prenestino;Italy;Production;Roma Scalo Prenestino;172.26.17.212;172.26.17.213
+vcl8sec-sp;Security SP Environment ;Italy;Production;Roma Scalo Prenestino;172.26.17.212;172.26.17.213
+vcpodsvs-npp;Svenska Spel NPP;International;Production;Svezia Visby;172.26.17.212;10.76.33.116
+vcpodca4-olg;OLG CA4;International;Production;Toronto;172.26.17.212;10.76.1.116
+vcpodca4-p1;CA4 P1;International;Production;Toronto;172.26.17.212;172.23.32.233
+vcpodca5-olg;OLG CA5;International;Production;Toronto;172.26.17.212;10.76.17.116
+vcpodca5-p1;CA5 P1;International;Production;Toronto;172.26.17.212;172.23.38.233
+vcpod-olgpt;OLG Development Environment;International;NO-Production;Toronto CA5;172.26.17.212;172.23.38.233

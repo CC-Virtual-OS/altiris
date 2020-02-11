@@ -1,0 +1,118 @@
+- name: test mysql
+  gather_facts: False
+  hosts: localhost
+  vars:
+    query_get_vms: "SELECT hostname FROM Deployment.requestMachine where requestId={{ reqId }}"
+    query_get_farm: "SELECT farmName FROM Deployment.requests where id={{ reqId }}"
+    vcenter_user: "administrator@vsphere.local"
+    vcenter_pass: "F0rz4CR!"
+    element_to_remove:
+      - "hostname"
+      - "farmName"
+  
+  tasks:
+    - name: Query mysql per recuperare VM della richiesta dal db
+      command:  mysql -u root -pPassword1 -h 172.26.49.32 -D Deployment -e "{{ query_get_vms }}"
+      register: query_result_vms
+      delegate_to: localhost
+
+    - name: Query mysql per recuperare Farm della richiesta dal db
+      command:  mysql -u root -pPassword1 -h 172.26.49.32 -D Deployment -e "{{ query_get_farm }}"
+      register: query_result_farm
+      delegate_to: localhost
+
+    - name: Valorizzo variabili VMs e Farm
+      set_fact:
+        vms: "{{ query_result_vms.stdout_lines | difference(element_to_remove) }}"
+        farm: "{{ query_result_farm.stdout_lines | difference(element_to_remove) }}"
+
+    - name: Leggo il csv Altiris
+      read_csv:
+        path: AltirisDC.csv
+        delimiter: ';'
+        key: Farm
+      register: altiris
+      delegate_to: localhost
+
+    - name: Valorizzo Variabili Altiris_ns e Altiris_pss
+      set_fact : 
+        altiris_nodes: 
+          altiris_ns: "{{ altiris.dict[ farm[0] ].Altiris_ns }}"
+          altiris_pss: "{{ altiris.dict[ farm[0] ].Altiris_pss }}"
+        
+    - name: Primo task per recupero Datacenter (autenticazione vcenter)
+      uri:
+        url: "https://{{ farm[0] }}/rest/com/vmware/cis/session"
+        validate_certs: no
+        method: POST
+        user: "{{ vcenter_user }}"
+        password: "{{ vcenter_pass }}"
+        force_basic_auth: yes
+        return_content: yes
+        status_code: 200
+      register: ses
+      delegate_to: localhost
+
+    - name: Secondo task per recupero Datacenter (Get datacenter rest Api)
+      uri:
+        url: "https://{{ farm[0] }}/rest/vcenter/datacenter"
+        validate_certs: no
+        method: GET
+        return_content: yes
+        status_code: 200
+        headers:
+          Cookie: "{{ ses.set_cookie }}"
+      register: datacenter
+      delegate_to: localhost
+
+    - name: Valorizzo variabile datacenter
+      set_fact:
+        vcenter_datacenter: "{{ datacenter.json.value[0].name }}"
+    
+    - name: Creo il nuovo inventory con le VMs trovate sul db
+      add_host: 
+        name: "{{ item }}"
+        groups: new_hosts
+      args:
+        vcenter_user: "{{ vcenter_user }}"
+        vcenter_pass: "{{ vcenter_pass }}"
+        farm: "{{ farm[0] }}"
+        datacenter: "{{ vcenter_datacenter }}"
+        altiris_nodes: "{{ altiris_nodes }}"
+        vms: "{{ vms }}"
+      with_items: "{{ vms }}"
+
+
+##### CAMBIO HOST GROUP APPENA CREATO ####
+
+- hosts: new_hosts
+  gather_facts: False
+  vars:
+    # ansible_python_interpreter: "/usr/bin/env python2.7"
+  tasks:
+
+    - name: Recupero informazioni/facts delle vm 
+      vmware_guest_info:
+        hostname: "{{ farm }}"
+        username: "{{ vcenter_user }}"
+        password: "{{ vcenter_pass }}"
+        validate_certs: False
+        datacenter: "{{ datacenter }}"
+        name: "{{ inventory_hostname }}"
+      register: template_facts
+      delegate_to: localhost
+
+    - name: memorizzo la folder e l's.o. del sistema
+      set_fact:
+        folder: "{{ template_facts.instance.hw_folder }}"
+        guest_os: "{{ template_facts.instance.hw_guest_full_name }}"
+    
+
+    - include_role:
+        name: linux
+      when: guest_os is search("Red Hat")
+
+    # - include_role:
+    #     name: windows
+    #   when: guest_os is search("Windows")
+

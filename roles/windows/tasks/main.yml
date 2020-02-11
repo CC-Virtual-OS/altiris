@@ -1,0 +1,18 @@
+- name: Test altiris nodes reachable
+  win_wait_for:
+    host:  "{{ altiris_nodes.altiris_ns }}"
+    port: "{{ item }}"
+    state: started
+    delay: 0
+    timeout: 3
+  register: cmdout
+  ignore_errors: yes
+  with_items:
+    - 80
+    - 443
+    - 50123 
+    - 50124
+
+- debug:
+    msg: "{{ cmdout }}"
+

@@ -1,0 +1,65 @@
+- name: Test altiris nodes reachable
+  wait_for:
+    host:  "{{ altiris_nodes.altiris_ns }}"
+    port: "{{ item }}"
+    state: started
+    delay: 0
+    timeout: 3
+  register: check_net
+  ignore_errors: yes
+  with_items:
+    - 80
+    - 443
+    - 50123
+    - 50124
+
+### OUTPUT NEL CASO IL CHECK NET FALLISCA
+- set_fact:
+    ports_failed: "{{ check_net | json_query('results[?failed==`true`].item') | join(' ') }}"
+  when: check_net is failed
+
+- debug: 
+    msg: "{{ inventory_hostname }} telnet to {{ altiris_nodes.altiris_ns }} FAILED ports {{ ports_failed }}"
+  when: ports_failed is defined
+
+
+### CONTINUO NEL CASO IL CHECK NET HA SUCCESSO
+
+- name: clean altiris resolution to hosts file 
+  lineinfile:
+    backup: yes
+    path: /etc/hosts
+    regexp: '(?i).*altiris.*'
+    state: absent
+  when: check_net is succeeded
+  register: hosts_file_clean
+
+
+- name: Add mappings to /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    block: |
+      172.26.17.212  wp-altiris-ns1  wp-altiris-ns1.lottomatica.net altiris-corp altiris-corp.lottomatica.net
+      172.26.17.213  wp-altiris-pss1 wp-altiris-pss1.lottomatica.net
+      172.26.17.214  wp-altiris-pss2 wp-altiris-pss2.lottomatica.net
+      10.6.139.4  altiris-bus altiris-bus.lottomatica.net
+    marker: "# {mark} ALTIRIS BLOCK"
+  when: check_net is succeeded
+
+- name: Copy file with owner and permissions
+  copy:
+    src: files/aex-bootstrap-linux
+    dest: /home/administrator/aex-bootstrap-linux
+    owner: root
+    group: root
+    mode: '0744'
+  register: copy_file
+  when: check_net is succeeded
+
+- name: Execute the script.
+  shell: /home/administrator/aex-bootstrap-linux
+  register: script_output
+  when: copy_file is succeeded
+
+- debug:
+    msg: "{{ script_output }}"
