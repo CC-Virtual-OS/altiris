@@ -1,2 +1,2 @@
 # altiris
-Playbook to test and install altiris agent
+.Playbook to test and install altiris agent
