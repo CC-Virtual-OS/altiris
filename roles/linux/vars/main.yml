@@ -6,5 +6,5 @@ ansible_vmware_validate_certs: no
 ansible_vmware_guest_path: "{{ folder }}/{{ inventory_hostname }}"
 ansible_vmware_tools_user: root
 ansible_vmware_tools_password: C4mb14m1!
-# python_interpreter: "/usr/bin/env python3"
+ansible_python_interpreter: auto_silent
 

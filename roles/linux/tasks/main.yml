@@ -1,26 +1,42 @@
-- name: Test altiris nodes reachable
+### Check Telnet ns
+- name: Test altiris node NS reachable
   wait_for:
     host:  "{{ altiris_nodes.altiris_ns }}"
     port: "{{ item }}"
     state: started
     delay: 0
     timeout: 3
-  register: check_net
+  register: check_net_ns
   ignore_errors: yes
   with_items:
     - 80
-    - 443
+    - 8443
     - 50123
     - 50124
 
-### OUTPUT NEL CASO IL CHECK NET FALLISCA
-- set_fact:
-    ports_failed: "{{ check_net | json_query('results[?failed==`true`].item') | join(' ') }}"
-  when: check_net is failed
+### Check Telnet pss
+- name: Test altiris node PSS reachable
+  wait_for:
+    host:  "{{ altiris_nodes.altiris_pss }}"
+    port: "{{ item }}"
+    state: started
+    delay: 0
+    timeout: 3
+  register: check_net_pss
+  ignore_errors: yes
+  with_items:
+    - 80
+    - 8443
+    - 50124
 
-- debug: 
-    msg: "{{ inventory_hostname }} telnet to {{ altiris_nodes.altiris_ns }} FAILED ports {{ ports_failed }}"
-  when: ports_failed is defined
+
+- set_fact: 
+    ns_failed: "{{ altiris_nodes.altiris_ns }} failed on port  {{ check_net_ns | json_query('results[?failed==`true`].item') | join(' ') }}"
+  when: check_net_ns is failed
+
+- set_fact: 
+    pss_failed: "{{ altiris_nodes.altiris_pss }} failed on port  {{ check_net_pss | json_query('results[?failed==`true`].item') | join(' ') }}"
+  when: check_net_pss is failed
 
 
 ### CONTINUO NEL CASO IL CHECK NET HA SUCCESSO
@@ -31,7 +47,7 @@
     path: /etc/hosts
     regexp: '(?i).*altiris.*'
     state: absent
-  when: check_net is succeeded
+  when: check_net_ns is succeeded and check_net_pss is succeeded
   register: hosts_file_clean
 
 
@@ -44,7 +60,7 @@
       172.26.17.214  wp-altiris-pss2 wp-altiris-pss2.lottomatica.net
       10.6.139.4  altiris-bus altiris-bus.lottomatica.net
     marker: "# {mark} ALTIRIS BLOCK"
-  when: check_net is succeeded
+  when: check_net_ns is succeeded and check_net_pss is succeeded
 
 - name: Copy file with owner and permissions
   copy:
@@ -54,12 +70,22 @@
     group: root
     mode: '0744'
   register: copy_file
-  when: check_net is succeeded
+  when: check_net_ns is succeeded and check_net_pss is succeeded
 
 - name: Execute the script.
   shell: /home/administrator/aex-bootstrap-linux
   register: script_output
-  when: copy_file is succeeded
+  when: check_net_ns is succeeded and check_net_pss is succeeded
 
-- debug:
+
+- debug: 
+    msg: "{{ ns_failed }}"
+  when: ns_failed is defined
+
+- debug: 
+    msg: "{{ pss_failed }}"
+  when: pss_failed is defined
+
+- debug: 
     msg: "{{ script_output }}"
+  when: script_output is defined

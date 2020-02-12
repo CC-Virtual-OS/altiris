@@ -1,4 +1,4 @@
-- name: test mysql
+- name: Altiris agent installation
   gather_facts: False
   hosts: localhost
   vars:
