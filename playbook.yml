@@ -38,7 +38,7 @@
       set_fact : 
         altiris_nodes: 
           altiris_ns: "{{ altiris.dict[ farm[0] ].Altiris_ns }}"
-          altiris_pss: "{{ altiris.dict[ farm[0] ].Altiris_pss }}"
+          altiris_local: "{{ altiris.dict[ farm[0] ].Altiris_local }}"
         
     - name: Primo task per recupero Datacenter (autenticazione vcenter)
       uri:
@@ -110,7 +110,7 @@
 
     - include_role:
         name: linux
-      when: guest_os is search("Red Hat")
+      when: guest_os is search("Red Hat") or guest_os is search("CentOS")
 
     # - include_role:
     #     name: windows

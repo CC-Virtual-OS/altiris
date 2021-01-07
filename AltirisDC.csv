@@ -1,4 +1,4 @@
-Farm;Description;Country;Environment;Datacenter;Altiris_ns;Altiris_pss
+Farm;Description;Country;Environment;Datacenter;Altiris_ns;Altiris_local
 vcpod-acy;Philadelphia ;International;Production;Atlantic City;172.26.17.212;172.23.46.233
 VCPODCA4-P2;Toronto Kamloops RGS;International;Production;Canada Kamloops;172.26.17.212;172.23.32.233
 vcpodca5-p2;Toronto Kamloops RGS DR;International;Production;Canada Kamloops;172.26.17.212;172.23.38.233
@@ -14,7 +14,7 @@ vcpoddrmi;Rozzano Disaster Recovery;Italy;Production;Milano Rozzano;172.26.17.21
 VCPODGEVDR;Gratta e Vinci DR;Italy;Production;Milano Rozzano;172.26.17.212;172.26.71.116
 VCPODGEVPREP;Gratta e Vinci Preproduzione;Italy;NO-Production;Milano Rozzano;172.26.17.212;172.26.71.116
 vcpoditzmi-p1;International ITZ-MI;International;Production;Milano Rozzano;172.26.17.212;172.26.71.116
-vcpodppmi;PreProduzione Centro servizi Milano;Italy;NO-Production;Milano Rozzano;172.26.17.212;172.26.71.116
+vcpodcspp.preprod.local;PreProduzione Centro servizi Milano;Italy;NO-Production;Milano Rozzano;172.26.17.212;172.26.71.116
 vcpodimel;IMEL CartaLis Production Milano;Italy;Production;Milano Staro;172.26.17.212;172.26.71.116
 vcpodnccmi;NCC Milano;Italy;Production;Milano Staro;172.26.17.212;172.26.71.116
 vcpodppimel;IMEL CartaLis Prestazionale Milano;Italy;NO-Production;Milano Staro;172.26.17.212;172.26.71.116

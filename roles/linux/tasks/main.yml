@@ -1,91 +1,141 @@
-### Check Telnet ns
-- name: Test altiris node NS reachable
+### Check Telnet to main Server Altiris NS PSS1 and PSS2
+
+# - name: Check Telnet to MAIN NS Server Altiris
+#   wait_for:
+#     host:  "{{ altiris_ns }}"
+#     port: "{{ item }}"
+#     state: started
+#     delay: 0
+#     timeout: 3
+#   register: check_net_altiris_ns
+#   ignore_errors: yes
+#   with_items:
+#     - 80
+#     - 443
+#     - 50123
+#     - 50124
+
+# - name: Check Telnet to PSS1 Server Altiris
+#   wait_for:
+#     host:  "{{ altiris_pss1 }}"
+#     port: "{{ item }}"
+#     state: started
+#     delay: 0
+#     timeout: 3
+#   register: check_net_altiris_pss1
+#   ignore_errors: yes
+#   with_items:
+#     - 80
+#     - 443
+#     - 50124
+
+# - name: Check Telnet to PSS2 Server Altiris
+#   wait_for:
+#     host:  "{{ altiris_pss2 }}"
+#     port: "{{ item }}"
+#     state: started
+#     delay: 0
+#     timeout: 3
+#   register: check_net_altiris_pss2
+#   ignore_errors: yes
+#   with_items:
+#     - 80
+#     - 8443
+#     - 50124
+
+
+## Check Telnet to local Server Altiris 
+- name: Check Telnet to LOCAL Server Altiris 
   wait_for:
-    host:  "{{ altiris_nodes.altiris_ns }}"
-    port: "{{ item }}"
+    host:  "{{ altiris_nodes.altiris_local }}"
+    port: 443
     state: started
     delay: 0
     timeout: 3
-  register: check_net_ns
+  register: check_net_altiris_local
   ignore_errors: yes
-  with_items:
-    - 80
-    - 8443
-    - 50123
-    - 50124
 
-### Check Telnet pss
-- name: Test altiris node PSS reachable
-  wait_for:
-    host:  "{{ altiris_nodes.altiris_pss }}"
-    port: "{{ item }}"
-    state: started
-    delay: 0
-    timeout: 3
-  register: check_net_pss
+
+
+
+
+
+## CONTINUO NEL CASO IL CHECK NET HA SUCCESSO
+
+##### TEST #####
+
+# - debug:
+#     msg: "QUI AVREI INSTALLATO ALTIRIS"
+#   when: check_net_altiris_ns is succeeded
+
+##### END TEST #####
+
+
+
+# - name: clean altiris resolution to hosts file 
+#   lineinfile:
+#     backup: yes
+#     path: /etc/hosts
+#     regexp: '(?i).*altiris.*'
+#     state: absent
+#   when: check_net_altiris_ns is succeeded 
+#   register: hosts_file_clean
+
+
+# - name: Add mappings to /etc/hosts
+#   blockinfile:
+#     path: /etc/hosts
+#     block: |
+#       172.26.17.212  wp-altiris-ns1  wp-altiris-ns1.lottomatica.net altiris-corp altiris-corp.lottomatica.net
+#       172.26.17.213  wp-altiris-pss1 wp-altiris-pss1.lottomatica.net
+#       172.26.17.214  wp-altiris-pss2 wp-altiris-pss2.lottomatica.net
+#       10.6.139.4  altiris-bus altiris-bus.lottomatica.net
+#     marker: "# {mark} ALTIRIS BLOCK"
+#   when: check_net_altiris_ns is succeeded 
+
+# - name: Copy file with owner and permissions
+#   copy:
+#     src: files/aex-bootstrap-linux
+#     dest: /home/administrator/aex-bootstrap-linux
+#     owner: root
+#     group: root
+#     mode: '0744'
+#   register: copy_file
+#   when: check_net_altiris_ns is succeeded 
+
+# - name: Execute the script, Installing Altiris Agent.
+#   shell: /home/administrator/aex-bootstrap-linux
+#   register: script_output
+#   when: check_net_altiris_ns is succeeded 
+
+
+
+# - debug:
+#     msg: "{{ inventory_hostname }} {{ check_net_altiris_ns.msg }}"
+#   when: check_net_altiris_ns.msg is defined and check_net_altiris_ns.failed == true
+#   failed_when: true
+
+# - debug:
+#     msg: "{{ inventory_hostname }} {{ check_net_altiris_pss1.msg }}"
+#   when: check_net_altiris_pss1.msg is defined and check_net_altiris_pss1.failed == true
+#   failed_when: true
+
+# - debug:
+#     msg: "{{ inventory_hostname }} {{ check_net_altiris_pss2.msg }}"
+#   when: check_net_altiris_pss2.msg is defined and check_net_altiris_pss2.failed == true
+#   failed_when: true
+
+- debug:
+    msg: "{{ inventory_hostname }} {{ check_net_altiris_local.msg }}"
+  when: check_net_altiris_local.msg is defined and check_net_altiris_local.failed == true
+  failed_when: true
   ignore_errors: yes
-  with_items:
-    - 80
-    - 8443
-    - 50124
 
 
-- set_fact: 
-    ns_failed: "{{ altiris_nodes.altiris_ns }} failed on port  {{ check_net_ns | json_query('results[?failed==`true`].item') | join(' ') }}"
-  when: check_net_ns is failed
+- copy:
+    content: "{% for host in groups.new_hosts %}{{ hostvars[host].check_net_altiris_local.msg }}\n{% endfor %}"
+    dest: /tmp/test
+  delegate_to: localhost
+  run_once: true
+  when: check_net_altiris_local.msg is defined
 
-- set_fact: 
-    pss_failed: "{{ altiris_nodes.altiris_pss }} failed on port  {{ check_net_pss | json_query('results[?failed==`true`].item') | join(' ') }}"
-  when: check_net_pss is failed
-
-
-### CONTINUO NEL CASO IL CHECK NET HA SUCCESSO
-
-- name: clean altiris resolution to hosts file 
-  lineinfile:
-    backup: yes
-    path: /etc/hosts
-    regexp: '(?i).*altiris.*'
-    state: absent
-  when: check_net_ns is succeeded and check_net_pss is succeeded
-  register: hosts_file_clean
-
-
-- name: Add mappings to /etc/hosts
-  blockinfile:
-    path: /etc/hosts
-    block: |
-      172.26.17.212  wp-altiris-ns1  wp-altiris-ns1.lottomatica.net altiris-corp altiris-corp.lottomatica.net
-      172.26.17.213  wp-altiris-pss1 wp-altiris-pss1.lottomatica.net
-      172.26.17.214  wp-altiris-pss2 wp-altiris-pss2.lottomatica.net
-      10.6.139.4  altiris-bus altiris-bus.lottomatica.net
-    marker: "# {mark} ALTIRIS BLOCK"
-  when: check_net_ns is succeeded and check_net_pss is succeeded
-
-- name: Copy file with owner and permissions
-  copy:
-    src: files/aex-bootstrap-linux
-    dest: /home/administrator/aex-bootstrap-linux
-    owner: root
-    group: root
-    mode: '0744'
-  register: copy_file
-  when: check_net_ns is succeeded and check_net_pss is succeeded
-
-- name: Execute the script.
-  shell: /home/administrator/aex-bootstrap-linux
-  register: script_output
-  when: check_net_ns is succeeded and check_net_pss is succeeded
-
-
-- debug: 
-    msg: "{{ ns_failed }}"
-  when: ns_failed is defined
-
-- debug: 
-    msg: "{{ pss_failed }}"
-  when: pss_failed is defined
-
-- debug: 
-    msg: "{{ script_output }}"
-  when: script_output is defined

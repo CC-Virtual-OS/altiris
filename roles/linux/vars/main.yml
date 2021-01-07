@@ -7,4 +7,7 @@ ansible_vmware_guest_path: "{{ folder }}/{{ inventory_hostname }}"
 ansible_vmware_tools_user: root
 ansible_vmware_tools_password: C4mb14m1!
 ansible_python_interpreter: auto_silent
+altiris_ns: "172.26.17.212"    
+altiris_pss1: "172.26.17.213"
+altiris_pss2: "172.26.17.214"
 
